@@ -62,8 +62,6 @@ void FunctionWindow::mouseReleaseEvent(QMouseEvent *event) {
     if (event->button() == Qt::RightButton) {
         qreal curr_x = event->x();
         qreal curr_y = event->y();
-        qDebug() << curr_x << " " << curr_y;
-        qDebug() << width() << " " << height();
 
         // координаты, которые получились при зажатии и отпускании мыши
         qreal min_x = (curr_x < press_x) ? curr_x : press_x;
@@ -82,8 +80,8 @@ void FunctionWindow::mouseReleaseEvent(QMouseEvent *event) {
 
         qreal min_range_x = min_axis_x + (axis_dx * min_x);
         qreal max_range_x = max_axis_x - (axis_dx * (width() - max_x));
-        qreal min_range_y = min_axis_y + (axis_dy * (height() - min_y));
-        qreal max_range_y = max_axis_y - (axis_dy * max_y);
+        qreal min_range_y = min_axis_y + (axis_dy * min_y);
+        qreal max_range_y = max_axis_y - (axis_dy * (height() - max_y));
         change_range(min_range_x, min_range_y, max_range_x, max_range_y);
     } else {
         QChartView::mouseReleaseEvent(event);
@@ -108,8 +106,6 @@ void FunctionWindow::keyReleaseEvent(QKeyEvent *event) {
 void FunctionWindow::zoom_out_clicked() {
     change_range(axisX->min()-abs(axisX->min()/1.1), axisY->min()-abs(axisY->min()/1.1),
                  axisX->max()+abs(axisX->max()/1.1), axisY->max()+abs(axisY->max()/1.1));
-
-    qDebug() << width() << " " << height();
 }
 
 void FunctionWindow::initial_range_clicked() {
