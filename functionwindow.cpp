@@ -38,6 +38,8 @@ FunctionWindow::FunctionWindow(QVector<qreal> x, QVector<qreal> y,
     _init_min_y = axisY->min();
     _init_max_y = axisY->max();
 
+    QRectF rect(100, 100, 600, 200);
+    chart->setPlotArea(rect);
     setChart(chart);
     QHBoxLayout *h_box = new QHBoxLayout;
     h_box->addWidget(_zoom_out);
@@ -45,21 +47,23 @@ FunctionWindow::FunctionWindow(QVector<qreal> x, QVector<qreal> y,
     h_box->setAlignment(Qt::AlignTop);
     setLayout(h_box);
     setRenderHint(QPainter::Antialiasing);
-
+    setFixedSize(800, 400);
 }
 
 void FunctionWindow::mousePressEvent(QMouseEvent *event) {
-    if (event->button() == Qt::RightButton) {
+    if (event->button() == Qt::RightButton && is_under_mouse(event->x(), event->y())) {
         press_x = event->x();
         press_y = event->y();
     }
     else {
+        press_x = 0;
+        press_y = 0;
         QChartView::mousePressEvent(event);
     }
 }
 
 void FunctionWindow::mouseReleaseEvent(QMouseEvent *event) {
-    if (event->button() == Qt::RightButton) {
+    if (event->button() == Qt::RightButton && is_under_mouse(event->x(), event->y())) {
         qreal curr_x = event->x();
         qreal curr_y = event->y();
 
@@ -75,13 +79,14 @@ void FunctionWindow::mouseReleaseEvent(QMouseEvent *event) {
         qreal min_axis_y = axisY->min();
         qreal max_axis_y = axisY->max();
 
-        qreal axis_dx = (max_axis_x - min_axis_x) / width();
-        qreal axis_dy = (max_axis_y - min_axis_y) / height();
+        qreal axis_dx = (max_axis_x - min_axis_x) / chart->plotArea().width();
+        qreal axis_dy = (max_axis_y - min_axis_y) / chart->plotArea().height();
 
-        qreal min_range_x = min_axis_x + (axis_dx * min_x);
-        qreal max_range_x = max_axis_x - (axis_dx * (width() - max_x));
-        qreal min_range_y = min_axis_y + (axis_dy * min_y);
-        qreal max_range_y = max_axis_y - (axis_dy * (height() - max_y));
+        qreal min_range_x = min_axis_x + abs((axis_dx * (chart->plotArea().x() - min_x)));
+        qreal max_range_x = max_axis_x - abs((axis_dx * (chart->plotArea().x() + chart->plotArea().width() - max_x)));
+        qreal min_range_y = min_axis_y + abs((axis_dy * (chart->plotArea().y() + chart->plotArea().height() - max_y)));
+        qreal max_range_y = max_axis_y - abs((axis_dy * (chart->plotArea().y() - min_y)));
+
         change_range(min_range_x, min_range_y, max_range_x, max_range_y);
     } else {
         QChartView::mouseReleaseEvent(event);
@@ -104,8 +109,8 @@ void FunctionWindow::keyReleaseEvent(QKeyEvent *event) {
 }
 
 void FunctionWindow::zoom_out_clicked() {
-    change_range(axisX->min()-abs(axisX->min()/1.1), axisY->min()-abs(axisY->min()/1.1),
-                 axisX->max()+abs(axisX->max()/1.1), axisY->max()+abs(axisY->max()/1.1));
+    change_range(axisX->min()-abs(axisX->min()/10), axisY->min()-abs(axisY->min()/10),
+                 axisX->max()+abs(axisX->max()/10), axisY->max()+abs(axisY->max()/10));
 }
 
 void FunctionWindow::initial_range_clicked() {
@@ -115,4 +120,10 @@ void FunctionWindow::initial_range_clicked() {
 void FunctionWindow::change_range(qreal minX, qreal minY, qreal maxX, qreal maxY) {
     axisX->setRange(minX, maxX);
     axisY->setRange(minY, maxY);
+}
+
+bool FunctionWindow::is_under_mouse(int x, int y) {
+    return (x >= chart->plotArea().x() && x <= chart->plotArea().x() + chart->plotArea().width() &&
+            y >= chart->plotArea().y() && y <= chart->plotArea().y() + chart->plotArea().height());
+
 }

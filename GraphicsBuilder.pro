@@ -10,12 +10,10 @@ CONFIG += c++11
 
 SOURCES += \
     functionwindow.cpp \
-    main.cpp \
-    graphicswidget.cpp
+    main.cpp
 
 HEADERS += \
-    functionwindow.h \
-    graphicswidget.h
+    functionwindow.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

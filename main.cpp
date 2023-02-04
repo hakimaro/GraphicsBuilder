@@ -1,4 +1,4 @@
-#include "graphicswidget.h"
+#include "functionwindow.h"
 
 #include <QApplication>
 
@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     }
 
     // Запуск
-    GraphicsWidget w(x, y1, y2, "время", "что-то", "чего-то");
+    FunctionWindow w(x, y1, "время", "что-то");
     w.show();
     return a.exec();
 }

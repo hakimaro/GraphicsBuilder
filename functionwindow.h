@@ -23,7 +23,7 @@ protected:
 
 private:
     void change_range(qreal minX, qreal minY, qreal maxX, qreal maxY);
-
+    bool is_under_mouse(int x, int y);
     // Масштабирование
     QChart *chart = new QChart();
     QLineSeries *series;
@@ -43,3 +43,4 @@ private:
 };
 
 #endif // FUNCTIONWINDOW_H
+
