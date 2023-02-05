@@ -19,9 +19,9 @@ protected:
 private:
     void change_range(qreal minX, qreal minY, qreal maxX, qreal maxY);
     bool plot_is_under_mouse(int x, int y);
+
     // Масштабирование
     QChart *chart = new QChart();
-    QVector<QLineSeries*> _series;
     QValueAxis *axisX;
     QValueAxis *axisY;    
 

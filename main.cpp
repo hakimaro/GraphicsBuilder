@@ -12,8 +12,8 @@ int main(int argc, char *argv[])
     QVector<qreal> x1;
     QVector<qreal> y1;
     QVector<QString> legend;
-    legend.append("hello");
-    legend.append("world");
+    legend.append("y=x^2");
+    legend.append("y=4x");
     for(int i = -10; i <= 10; i++) {
         x1.append(i);
         y1.append(i*i);
@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 
     for(int i = -15; i <= 15; i++) {
         x2.append(i);
-        y2.append(i+3*i);
+        y2.append(4*i);
     }
 
     x.append(x1);
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     y.append(y2);
 
     // Запуск
-    FunctionWindow w(x, y, "time", "time, t", legend);
+    FunctionWindow w(x, y, "y", "x", legend);
     w.show();
     return a.exec();
 }

@@ -8,7 +8,6 @@ FunctionWindow::FunctionWindow(QVector<QVector<qreal>> x, QVector<QVector<qreal>
     file->open(QFile::ReadOnly);
     QString strCSS = QLatin1String(file->readAll());
     setStyleSheet(strCSS);
-    setFixedSize(800, 600);
 
     chart = new QChart();
     axisX = new QValueAxis();
@@ -84,8 +83,11 @@ void FunctionWindow::wheelEvent(QWheelEvent *event) {
         change_range(min_range_x, min_range_y, max_range_x, max_range_y);
     }
     else if (event->delta() < 0 && plot_is_under_mouse(x, y)) {
-        change_range(axisX->min()-abs(axisX->min()/10), axisY->min()-abs(axisY->min()/10),
-                     axisX->max()+abs(axisX->max()/10), axisY->max()+abs(axisY->max()/10));
+        qreal abs_max_axis_x = (abs(axisX->min()) > abs(axisX->max())) ? axisX->min() : axisX->max();
+        qreal abs_max_axis_y = (abs(axisY->min()) > abs(axisY->max())) ? axisY->min() : axisY->max();
+
+        change_range(axisX->min()-abs(abs_max_axis_x/10), axisY->min()-abs(abs_max_axis_y/10),
+                     axisX->max()+abs(abs_max_axis_x/10), axisY->max()+abs(abs_max_axis_y/10));
     }
 }
 
